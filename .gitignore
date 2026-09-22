@@ -1,0 +1,49 @@
+## ===================================================
+## 1. File build và thư mục nhị phân sinh ra tự động
+## ===================================================
+[Bb]in/
+[Oo]bj/
+[Aa]rms/
+[Aa]rm64/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+
+## ===================================================
+## 2. File cấu hình và cache của Visual Studio / VS Code
+## ===================================================
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+.vscode/
+
+## ===================================================
+## 3. Package quản lý thư viện (NuGet, npm)
+## ===================================================
+packages/
+*.nupkg
+node_modules/
+
+## ===================================================
+## 4. File cấu hình môi trường chứa Secret / Chuỗi kết nối riêng
+## ===================================================
+# Tránh lộ thông tin DB cá nhân hoặc mật khẩu máy thật
+appsettings.Development.json
+*.local.json
+
+## ===================================================
+## 5. Thư mục ảnh upload động trong quá trình test
+## ===================================================
+# Giữ lại thư mục images nhưng bỏ qua các file ảnh bạn upload thử nghiệm
+wwwroot/images/*
+!wwwroot/images/.gitkeep
+
+## ===================================================
+## 6. File log, cơ sở dữ liệu local tạm
+## ===================================================
+*.log
+*.mdf
+*.ldf
