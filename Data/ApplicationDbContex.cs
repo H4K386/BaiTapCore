@@ -30,7 +30,34 @@ namespace _0306241284_NguyenKhanhHuy.Data
                 .HasForeignKey(p => p.CategoryId)
                 .IsRequired();
             });
+            modelBuilder.Entity<Order>(entity => {
+                entity.ToTable("Orders");
+                entity.HasKey(o => o.Id);
+                entity.Property(o => o.CustomerName)
+                .HasMaxLength(100)
+                .IsRequired();
+                entity.Property(o => o.PhoneNumber)
+                .HasMaxLength(20)
+                .IsRequired();
+                entity.Property(o => o.Address)
+                .HasMaxLength(30)
+                .IsRequired();
+                entity.Property(o => o.Note)
+                .HasMaxLength(30);
+                entity.Property(o => o.TotalAmount)
+                .HasPrecision(18, 2);
+                entity.Property(o => o.Status)
+                .HasConversion<string>()
+                .HasMaxLength(20)
+                .HasDefaultValue(OrderStatus.Pending);
+                entity.Property(o => o.OrderDate)
+                .HasDefaultValueSql("GetDate()");
+                entity.HasMany(o => o.OrderDetail)
+                .WithOne(od => od.Order)
+                .HasForeignKey(od => od.OrderId);
+            });
         }
+
 
     }
 }
