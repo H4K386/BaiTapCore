@@ -20,7 +20,15 @@ namespace _0306241284_NguyenKhanhHuy.Data
             {
                 entity.ToTable("Categories");
                 entity.HasKey(c => c.Id);
-
+                entity.Property(c => c.Name)
+                .IsRequired()
+                .HasMaxLength(50);
+                entity.Property(c => c.Description)
+                .HasMaxLength(150);
+                entity.HasMany(c => c.Products)
+                .WithOne(p => p.Category)
+                .HasForeignKey(p => p.CategoryId)
+                .IsRequired();
             });
         }
 
