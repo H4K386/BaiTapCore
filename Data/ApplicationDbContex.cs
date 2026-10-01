@@ -1,4 +1,6 @@
-﻿using _0306241284_NguyenKhanhHuy.Models;
+﻿using System.Reflection.PortableExecutable;
+using _0306241284_NguyenKhanhHuy.Models;
+using Humanizer;
 using Microsoft.EntityFrameworkCore;
 
 namespace _0306241284_NguyenKhanhHuy.Data
@@ -23,12 +25,9 @@ namespace _0306241284_NguyenKhanhHuy.Data
                 entity.Property(c => c.Name)
                 .IsRequired()
                 .HasMaxLength(50);
+                entity.HasIndex(c=>c.Name).IsUnique();
                 entity.Property(c => c.Description)
                 .HasMaxLength(150);
-                entity.HasMany(c => c.Products)
-                .WithOne(p => p.Category)
-                .HasForeignKey(p => p.CategoryId)
-                .IsRequired();
             });
             modelBuilder.Entity<Order>(entity => {
                 entity.ToTable("Orders");
@@ -52,9 +51,60 @@ namespace _0306241284_NguyenKhanhHuy.Data
                 .HasDefaultValue(OrderStatus.Pending);
                 entity.Property(o => o.OrderDate)
                 .HasDefaultValueSql("GetDate()");
-                entity.HasMany(o => o.OrderDetail)
-                .WithOne(od => od.Order)
-                .HasForeignKey(od => od.OrderId);
+            });
+            modelBuilder.Entity<Product>(entity => {
+                entity.ToTable("Products");
+                entity.HasKey(p => p.Id);
+                entity.Property(p => p.Name)
+                .HasMaxLength(250)
+                .IsRequired();
+                entity.HasIndex(p => p.Name).HasDatabaseName("IX_Product_Name");
+                entity.Property(p => p.Price)
+                .HasPrecision(18,2)
+                .IsRequired();
+                entity.Property(p => p.Image).HasMaxLength(250);
+                entity.Property(p => p.CreateAt)
+                .HasDefaultValueSql("GetDate()");
+                entity.Property(p=>p.Status)
+                .HasDefaultValue(true)
+                .HasDefaultValueSql("1");
+                entity.HasOne(p => p.Category)
+                .WithMany(c => c.Products)
+                .HasForeignKey(p => p.CategoryId)
+                .OnDelete(DeleteBehavior.Cascade);
+            });
+            modelBuilder.Entity<OrderDetail>(entity =>
+            {
+               entity.ToTable("OrderDetails");
+               entity.HasKey(od => od.Id);
+               entity.Property(od => od.Quantity).IsRequired();
+               entity.Property(od => od.Price).HasPrecision(18,2);
+
+               entity.HasOne(od => od.Order)
+               .WithMany(o => o.OrderDetail)
+               .HasForeignKey(od => od.OrderId)
+               .OnDelete(DeleteBehavior.Cascade);
+
+               entity.HasOne(od => od.Product)
+               .WithMany(p =>p.OrderDetail)
+               .HasForeignKey(od => od.ProductId)
+               .OnDelete(DeleteBehavior.Restrict);
+            });
+            modelBuilder.Entity<User>(entity =>
+            {
+               entity.ToTable("Users");
+               entity.HasKey(u => u.Id);
+               entity.Property(u => u.UserName)
+               .HasMaxLength(50)
+               .IsRequired();
+               entity.Property(u => u.Password)
+               .HasMaxLength(150)
+               .IsRequired();
+               entity.Property(u=>u.FullName).HasMaxLength(100);
+               entity.Property(u => u.isAdmin)
+               .HasDefaultValue(true)
+               .HasDefaultValueSql("1");
+
             });
         }
 
