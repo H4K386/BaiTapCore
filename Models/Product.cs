@@ -15,5 +15,6 @@ namespace _0306241284_NguyenKhanhHuy.Models
         public bool Status { get; set; } = true;
 
         public Category? Category { get; set; }
+        public ICollection<OrderDetail> OrderDetail {get;set;} = new List<OrderDetail>();
     }
 }

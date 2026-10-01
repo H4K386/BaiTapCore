@@ -3,7 +3,6 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using _0306241284_NguyenKhanhHuy.Data;
 
@@ -11,12 +10,10 @@ using _0306241284_NguyenKhanhHuy.Data;
 
 namespace _0306241284_NguyenKhanhHuy.Migrations
 {
-    [DbContext(typeof(ApplicationDbContex))]
-    [Migration("20260930181416_ModifyApplicationDbContext")]
-    partial class ModifyApplicationDbContext
+    [DbContext(typeof(ApplicationDbContext))]
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -44,6 +41,9 @@ namespace _0306241284_NguyenKhanhHuy.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Categories", (string)null);
                 });
@@ -109,6 +109,7 @@ namespace _0306241284_NguyenKhanhHuy.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Price")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("ProductId")
@@ -121,7 +122,9 @@ namespace _0306241284_NguyenKhanhHuy.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("OrderDetails");
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("OrderDetails", (string)null);
                 });
 
             modelBuilder.Entity("_0306241284_NguyenKhanhHuy.Models.Product", b =>
@@ -136,7 +139,9 @@ namespace _0306241284_NguyenKhanhHuy.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreateAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GetDate()");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -144,23 +149,64 @@ namespace _0306241284_NguyenKhanhHuy.Migrations
 
                     b.Property<string>("Image")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<decimal>("Price")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("Status")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
 
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products");
+                    b.HasIndex("Name")
+                        .HasDatabaseName("IX_Product_Name");
+
+                    b.ToTable("Products", (string)null);
+                });
+
+            modelBuilder.Entity("_0306241284_NguyenKhanhHuy.Models.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("isAdmin")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("_0306241284_NguyenKhanhHuy.Models.OrderDetail", b =>
@@ -171,7 +217,15 @@ namespace _0306241284_NguyenKhanhHuy.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("_0306241284_NguyenKhanhHuy.Models.Product", "Product")
+                        .WithMany("OrderDetail")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Order");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("_0306241284_NguyenKhanhHuy.Models.Product", b =>
@@ -191,6 +245,11 @@ namespace _0306241284_NguyenKhanhHuy.Migrations
                 });
 
             modelBuilder.Entity("_0306241284_NguyenKhanhHuy.Models.Order", b =>
+                {
+                    b.Navigation("OrderDetail");
+                });
+
+            modelBuilder.Entity("_0306241284_NguyenKhanhHuy.Models.Product", b =>
                 {
                     b.Navigation("OrderDetail");
                 });

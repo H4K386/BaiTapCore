@@ -14,6 +14,12 @@
     </PackageReference>
 	<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0" />
 	<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0" />
+	<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\Admin\Views\Product\" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
