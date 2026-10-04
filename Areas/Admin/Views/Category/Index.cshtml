@@ -1,4 +1,5 @@
-﻿
+﻿@using System.Linq
+@model IEnumerable<_0306241284_NguyenKhanhHuy.Models.Category>
     <div class="row g-4">
         <!-- Cột trái: Form thêm danh mục -->
         <div class="col-md-4">
@@ -33,7 +34,7 @@
             <div class="card shadow-sm border-0">
                 <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
                     <h6 class="mb-0 fw-bold text-dark">Danh sách danh mục</h6>
-                    <span class="badge bg-secondary">Tổng cộng: 2</span>
+                    <span class="badge bg-secondary">Tổng cộng: @Model.Count() </span>
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
@@ -46,31 +47,7 @@
                                     <th class="text-center" style="width: 140px;">Thao tác</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <!-- Dữ liệu mẫu 1 -->
-                                <tr>
-                                    <td>1</td>
-                                    <td class="fw-semibold">Điện tử</td>
-                                    <td class="text-muted small">Thiết bị và linh kiện điện tử</td>
-                                    <td class="text-center">
-                                        <a href="/Category/Edit/1" class="btn btn-sm btn-outline-warning me-1">Sửa</a>
-                                        <a href="/Category/Delete/1" class="btn btn-sm btn-outline-danger" onclick="return confirm('Bạn có chắc muốn xóa?')">Xóa</a>
-                                    </td>
-                                </tr>
-
-                                <!-- Dữ liệu mẫu 2 -->
-                                <tr>
-                                    <td>2</td>
-                                    <td class="fw-semibold">Thời trang</td>
-                                    <td class="text-muted small">Quần áo, phụ kiện</td>
-                                    <td class="text-center">
-                                        <a href="/Category/Edit/2" class="btn btn-sm btn-outline-warning me-1">Sửa</a>
-                                        <a href="/Category/Delete/2" class="btn btn-sm btn-outline-danger" onclick="return confirm('Bạn có chắc muốn xóa?')">Xóa</a>
-                                    </td>
-                                </tr>
-
-                                @* 
-                                <!-- Dùng với Model Razor: -->
+                            <tbody>                             
                                 @if (Model != null && Model.Any())
                                 {
                                     int index = 1;
@@ -87,7 +64,6 @@
                                         </tr>
                                     }
                                 }
-                                *@
                             </tbody>
                         </table>
                     </div>
@@ -95,3 +71,8 @@
             </div>
         </div>
     </div>
+@section Scripts {
+    @{
+
+    }
+}
