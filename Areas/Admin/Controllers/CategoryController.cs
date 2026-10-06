@@ -15,7 +15,8 @@ namespace _0306241284_NguyenKhanhHuy.Areas.Admin.Controllers
             _context = context;
         }
         [HttpPost]
-        public async Task<IActionResult> Create(Category model) {
+        public async Task<IActionResult> Create(Category model)
+        {
             Console.WriteLine($">>> DU LIEU NHAN DUOC: Name='{model.Name}', Desc='{model.Description}'");
             if (!ModelState.IsValid)
             {
@@ -23,7 +24,8 @@ namespace _0306241284_NguyenKhanhHuy.Areas.Admin.Controllers
                 // Dữ liệu nhập sai -> Trả lại View kèm model và lỗi để người dùng sửa
                 return RedirectToAction(nameof(Index));
             }
-            var category = new Category {
+            var category = new Category
+            {
                 Name = model.Name,
                 Description = model.Description ?? String.Empty
             };
@@ -48,5 +50,39 @@ namespace _0306241284_NguyenKhanhHuy.Areas.Admin.Controllers
 
             return View(category); // Gọi file Edit.cshtml
         }
+        [HttpPost]
+        public async Task<IActionResult> Edit(Category model)
+        {
+            if (!ModelState.IsValid) {
+                return View(model);
+            }
+            var category = await _context.Categories.FindAsync(model.Id);
+            if (category == null) return NotFound();
+            
+            category.Name = model.Name;
+            category.Description = model.Description;
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+        [HttpGet]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null) return NotFound();
+            var category = await _context.Categories.FindAsync(id);
+            if (category == null) return NotFound();
+            try
+            {
+                _context.Categories.Remove(category);
+                await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Xóa danh mục thành công!";
+            }
+            catch (DbUpdateException) {
+                TempData["ErrorMessage"] = "Không thể xóa danh mục này do đang có ràng buộc dữ liệu với Sản phẩm!";
+
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
     }
 }
