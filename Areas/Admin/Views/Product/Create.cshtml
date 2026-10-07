@@ -1,0 +1,139 @@
+﻿@model _0306241284_NguyenKhanhHuy.Models.Product
+
+@{
+    ViewData["Title"] = "Thêm sản phẩm mới";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Thêm sản phẩm mới</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading clearfix">
+                <span class="pull-left" style="line-height: 34px;">
+                    <i class="fa fa-plus-circle fa-fw"></i> Nhập thông tin sản phẩm
+                </span>
+                <a asp-action="Index" class="btn btn-default btn-sm pull-right">
+                    <i class="fa fa-arrow-left"></i> Quay lại danh sách
+                </a>
+            </div>
+            <div class="panel-body">
+                <form asp-action="Create" method="post" enctype="multipart/form-data" role="form">
+                    @Html.AntiForgeryToken()
+
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="row">
+                        <!-- Cột thông tin chính -->
+                        <div class="col-lg-8">
+                            <div class="form-group">
+                                <label asp-for="Name" class="control-label">Tên sản phẩm <span class="text-danger">*</span></label>
+                                <input asp-for="Name" class="form-control" placeholder="Nhập tên sản phẩm..." required />
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label asp-for="CategoryId" class="control-label">Danh mục <span class="text-danger">*</span></label>
+                                        <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId">
+                                            <option value="">-- Chọn danh mục --</option>
+                                        </select>
+                                        <span asp-validation-for="CategoryId" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">  
+                                    <div class="form-group">
+                                        <label asp-for="Price" class="control-label">Đơn giá (VNĐ) <span class="text-danger">*</span></label>
+                                        <div class="input-group">
+                                            <input asp-for="Price" type="number" step="1000" min="0" class="form-control text-right" placeholder="0" required />
+                                            <span class="input-group-addon">đ</span>
+                                        </div>
+                                        <span asp-validation-for="Price" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="Description" class="control-label">Mô tả sản phẩm</label>
+                                <textarea asp-for="Description" rows="5" class="form-control" placeholder="Nhập thông tin chi tiết về sản phẩm..."></textarea>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Cột bổ trợ: Hình ảnh & Trạng thái -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="control-label">Hình ảnh sản phẩm</label>
+                                <input type="file" name="imageFile" id="imageInput" class="form-control" accept="image/*" />
+                                <span class="help-block">Định dạng hỗ trợ: JPG, PNG, WEBP.</span>
+
+                                <!-- Khung xem trước hình ảnh -->
+                                <div class="text-center" style="margin-top: 15px;">
+                                    <img id="imagePreview" src="#" alt="Preview"
+                                         style="max-width: 100%; height: 160px; object-fit: cover; border-radius: 4px; border: 1px dashed #ccc; display: none;" />
+                                    <div id="noImageText" class="text-muted" style="padding: 40px 0; background: #f9f9f9; border: 1px dashed #ccc; border-radius: 4px;">
+                                        <i class="fa fa-picture-o fa-3x"></i>
+                                        <p style="margin-top: 8px; margin-bottom: 0;">Xem trước hình ảnh</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label">Trạng thái kinh doanh</label>
+                                <div class="checkbox" style="margin-top: 0;">
+                                    <label>
+                                        <input type="checkbox" asp-for="Status" checked /> Cho phép hiển thị & kinh doanh ngay
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr style="margin-top: 10px; margin-bottom: 20px;" />
+
+                    <div class="form-group text-right" style="margin-bottom: 0;">
+                        <a asp-action="Index" class="btn btn-default">
+                            <i class="fa fa-times"></i> Hủy bỏ
+                        </a>
+                        <button type="submit" class="btn btn-primary" style="margin-left: 8px;">
+                            <i class="fa fa-save"></i> Lưu sản phẩm
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+    }
+
+    <script>
+        // Preview hình ảnh khi người dùng chọn file
+        document.getElementById('imageInput').addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            const preview = document.getElementById('imagePreview');
+            const placeholder = document.getElementById('noImageText');
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    placeholder.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                preview.src = '#';
+                preview.style.display = 'none';
+                placeholder.style.display = 'block';
+            }
+        });
+    </script>
+}
